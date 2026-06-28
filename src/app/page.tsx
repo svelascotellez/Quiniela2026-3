@@ -7,6 +7,7 @@ import { TournamentBracket } from "@/components/TournamentBracket";
 import { getDynamicMatches } from "@/lib/matchUtils";
 import { UserTabs } from "@/components/UserTabs";
 import { SignOutButton } from "@/components/SignOutButton";
+import { RefreshButton } from "@/components/RefreshButton";
 
 export default async function Home() {
   const session = await getServerSession(authOptions);
@@ -56,12 +57,19 @@ export default async function Home() {
         <h2 className="text-xl md:text-2xl font-black mb-2 flex items-center gap-2">
           🏆 CLASIFICACIÓN QUINIELA MUNDIAL 2026 🏆
         </h2>
-        <p className="text-sm md:text-base font-semibold text-gray-700 flex items-center gap-2 mb-1">
-          📊 Actualizado: {new Date().toLocaleString("es-MX", { dateStyle: "short", timeStyle: "short", timeZone: "America/Mexico_City" })}
-        </p>
-        <p className="text-sm md:text-base font-semibold text-gray-700 flex items-center gap-2">
-          🎯 Puntos Máximos Disputados hasta hoy: {maxPointsDisputed}
-        </p>
+        <div className="flex flex-col md:flex-row md:items-center justify-between mb-4 gap-4">
+          <div>
+            <p className="text-sm md:text-base font-semibold text-gray-700 flex items-center gap-2 mb-1">
+              📊 Actualizado: {new Date().toLocaleString("es-MX", { dateStyle: "short", timeStyle: "short", timeZone: "America/Mexico_City" })}
+            </p>
+            <p className="text-sm md:text-base font-semibold text-gray-700 flex items-center gap-2">
+              🎯 Puntos Máximos Disputados hasta hoy: {maxPointsDisputed}
+            </p>
+          </div>
+          <div>
+            <RefreshButton />
+          </div>
+        </div>
         <hr className="border-t-2 border-dashed border-[#b3d493] my-4" />
         
         <ul className="space-y-3">
