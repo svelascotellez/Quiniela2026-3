@@ -7,6 +7,7 @@ import { revalidatePath } from "next/cache";
 export async function createUser(data: FormData) {
   const username = data.get("username") as string;
   const password = data.get("password") as string;
+  const role = data.get("role") as string || "USER";
 
   if (!username || !password) return { error: "Faltan campos" };
 
@@ -17,6 +18,7 @@ export async function createUser(data: FormData) {
       data: {
         username,
         password: hashedPassword,
+        role,
       },
     });
     revalidatePath("/admin");
@@ -41,6 +43,20 @@ export async function changeUserPassword(userId: string, data: FormData) {
     return { success: true };
   } catch(error) {
     return { error: "No se pudo actualizar la contraseña" };
+  }
+}
+
+export async function changeUserRole(userId: string, newRole: string) {
+  try {
+    await prisma.user.update({
+      where: { id: userId },
+      data: { role: newRole }
+    });
+    revalidatePath("/admin");
+    revalidatePath("/");
+    return { success: true };
+  } catch(error) {
+    return { error: "No se pudo actualizar el rol" };
   }
 }
 

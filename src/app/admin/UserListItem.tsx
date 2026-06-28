@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { changeUserPassword } from "./actions";
+import { changeUserPassword, changeUserRole } from "./actions";
 
 export function UserListItem({ user, index }: { user: any, index: number }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -29,6 +29,16 @@ export function UserListItem({ user, index }: { user: any, index: number }) {
     setLoading(false);
   }
 
+  async function handleToggleRole() {
+    setLoading(true);
+    const newRole = user.role === "ADMIN" ? "USER" : "ADMIN";
+    const res = await changeUserRole(user.id, newRole);
+    if (res?.error) {
+      alert(`❌ ${res.error}`);
+    }
+    setLoading(false);
+  }
+
   return (
     <li className="flex flex-col bg-gray-50 p-3 rounded shadow-sm border border-gray-100">
       <div className="flex justify-between items-center w-full">
@@ -39,6 +49,13 @@ export function UserListItem({ user, index }: { user: any, index: number }) {
         </span>
         <div className="flex items-center gap-4">
           <span className="font-bold text-[#0b132b]">{user.totalPoints} pts</span>
+          <button 
+            onClick={handleToggleRole}
+            disabled={loading}
+            className="text-xs bg-indigo-100 hover:bg-indigo-200 text-indigo-800 px-2 py-1 rounded transition-colors disabled:opacity-50"
+          >
+            {user.role === "ADMIN" ? "Quitar Admin" : "Hacer Admin"}
+          </button>
           <button 
             onClick={() => setIsEditing(!isEditing)}
             className="text-xs bg-gray-200 hover:bg-gray-300 text-gray-700 px-2 py-1 rounded transition-colors"
