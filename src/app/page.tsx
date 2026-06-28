@@ -8,6 +8,7 @@ import { getDynamicMatches } from "@/lib/matchUtils";
 import { UserTabs } from "@/components/UserTabs";
 import { SignOutButton } from "@/components/SignOutButton";
 import { RefreshButton } from "@/components/RefreshButton";
+import { DashboardStats } from "@/components/DashboardStats";
 
 export default async function Home() {
   const session = await getServerSession(authOptions);
@@ -47,8 +48,32 @@ export default async function Home() {
   const finishedMatchesCount = rawMatches.filter(m => m.isFinished).length;
   const maxPointsDisputed = finishedMatchesCount * 3;
 
+  const totalMatchesCount = rawMatches.length;
+
+  const totalParticipantsCount = rankingUsers.length;
+  const lockedQuinielasCount = rankingUsers.filter(u => u.isLocked).length;
+  const totalPointsSum = rankingUsers.reduce((sum, u) => sum + u.totalPoints, 0);
+  const averagePoints = totalParticipantsCount > 0 ? totalPointsSum / totalParticipantsCount : 0;
+  
+  let totalPredictionsCount = 0;
+  rankingUsers.forEach(u => {
+    totalPredictionsCount += u.predictions.length;
+  });
+
   const bracketComponent = (
     <TournamentBracket matches={matches} predictions={predictions} isLocked={currentUser?.isLocked || false} />
+  );
+
+  const dashboardComponent = (
+    <DashboardStats 
+      totalParticipants={totalParticipantsCount}
+      lockedQuinielas={lockedQuinielasCount}
+      totalMatches={totalMatchesCount}
+      finishedMatches={finishedMatchesCount}
+      averagePoints={averagePoints}
+      totalPredictions={totalPredictionsCount}
+      maxPointsPossible={maxPointsDisputed}
+    />
   );
 
   const rankingComponent = (
@@ -143,6 +168,7 @@ export default async function Home() {
       <UserTabs 
         bracketComponent={bracketComponent} 
         rankingComponent={rankingComponent} 
+        dashboardComponent={dashboardComponent}
       />
     </div>
   );
