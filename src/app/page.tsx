@@ -9,6 +9,7 @@ import { UserTabs } from "@/components/UserTabs";
 import { SignOutButton } from "@/components/SignOutButton";
 import { RefreshButton } from "@/components/RefreshButton";
 import { DashboardStats } from "@/components/DashboardStats";
+import { GroupStageResults } from "@/components/GroupStageResults";
 
 export default async function Home() {
   const session = await getServerSession(authOptions);
@@ -74,6 +75,10 @@ export default async function Home() {
       totalPredictions={totalPredictionsCount}
       maxPointsPossible={maxPointsDisputed}
     />
+  );
+
+  const groupStageComponent = (
+    <GroupStageResults />
   );
 
   const rankingComponent = (
@@ -169,6 +174,7 @@ export default async function Home() {
         bracketComponent={bracketComponent} 
         rankingComponent={rankingComponent} 
         dashboardComponent={dashboardComponent}
+        groupStageComponent={groupStageComponent}
       />
     </div>
   );

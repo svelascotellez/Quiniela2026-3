@@ -5,13 +5,15 @@ import { useState } from "react";
 export function UserTabs({ 
   bracketComponent, 
   rankingComponent,
-  dashboardComponent
+  dashboardComponent,
+  groupStageComponent
 }: { 
   bracketComponent: React.ReactNode;
   rankingComponent: React.ReactNode;
   dashboardComponent?: React.ReactNode;
+  groupStageComponent?: React.ReactNode;
 }) {
-  const [activeTab, setActiveTab] = useState<"bracket" | "ranking" | "dashboard">("bracket");
+  const [activeTab, setActiveTab] = useState<"bracket" | "ranking" | "dashboard" | "groupStage">("bracket");
 
   return (
     <div className="flex flex-col flex-1 h-full">
@@ -48,6 +50,16 @@ export function UserTabs({
           >
             Estadísticas
           </button>
+          <button
+            onClick={() => setActiveTab("groupStage")}
+            className={`flex-1 py-4 text-center font-bold text-xs md:text-sm uppercase tracking-wider transition-colors border-b-4 ${
+              activeTab === "groupStage"
+                ? "border-[#d4af37] text-[#0b132b]"
+                : "border-transparent text-gray-400 hover:text-gray-600 hover:bg-gray-50"
+            }`}
+          >
+            Fase de Grupos
+          </button>
         </div>
       </div>
 
@@ -66,6 +78,11 @@ export function UserTabs({
         {activeTab === "dashboard" && (
           <div className="flex-1 overflow-y-auto bg-[#f8f9fa]">
             {dashboardComponent}
+          </div>
+        )}
+        {activeTab === "groupStage" && (
+          <div className="flex-1 overflow-y-auto bg-[#f0ebd8]">
+            {groupStageComponent}
           </div>
         )}
       </div>
