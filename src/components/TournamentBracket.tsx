@@ -33,7 +33,7 @@ export function TournamentBracket({ matches, predictions, isAdmin = false }: { m
   };
 
   return (
-    <div className="w-full overflow-x-auto bg-[#f8f9fa] p-8 min-h-screen">
+    <div className="w-full h-full overflow-auto bg-[#f8f9fa] p-8">
       
       {/* Headers Row */}
       <div className="flex justify-between min-w-[2000px] mb-8 sticky top-0 z-10 px-4">
