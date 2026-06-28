@@ -1,28 +1,8 @@
 "use client";
 
+import { groupStageRanking } from "@/lib/groupStageData";
+
 export function GroupStageResults() {
-  const groupStageRanking = [
-    { rank: 1, name: "LUISGAMBINO", points: 72, exact: 13, eff: "33.3%", emoji: "🥇" },
-    { rank: 2, name: "Salvador Velasco", points: 63, exact: 10, eff: "29.2%", emoji: "🥈" },
-    { rank: 2, name: "Esly Diaz", points: 63, exact: 8, eff: "29.2%", emoji: "🥈" },
-    { rank: 4, name: "Final Nancy", points: 62, exact: 9, eff: "28.7%", emoji: "🏃‍♂️" },
-    { rank: 5, name: "Joand Hernandez", points: 61, exact: 9, eff: "28.2%", emoji: "🏃‍♂️" },
-    { rank: 6, name: "Final Alex Meneses", points: 60, exact: 10, eff: "27.8%", emoji: "🏃‍♂️" },
-    { rank: 7, name: "MoisesLeyva Moyejita", points: 59, exact: 7, eff: "27.3%", emoji: "🏃‍♂️" },
-    { rank: 8, name: "Cris HerreraR (1)", points: 58, exact: 8, eff: "26.9%", emoji: "🏃‍♂️" },
-    { rank: 9, name: "Yadira Estrada Ganadora", points: 55, exact: 9, eff: "25.5%", emoji: "🏃‍♂️" },
-    { rank: 10, name: "Final GuillermoDG", points: 54, exact: 6, eff: "25.0%", emoji: "🏃‍♂️" },
-    { rank: 10, name: "SCampoamorR Mundial 2026", points: 54, exact: 6, eff: "25.0%", emoji: "🏃‍♂️" },
-    { rank: 12, name: "Final Heidi QJ", points: 53, exact: 6, eff: "24.5%", emoji: "🏃‍♂️" },
-    { rank: 13, name: "Jose Carlos Aragon", points: 52, exact: 7, eff: "24.1%", emoji: "🏃‍♂️" },
-    { rank: 14, name: "Efrain RA", points: 48, exact: 7, eff: "22.2%", emoji: "🏃‍♂️" },
-    { rank: 14, name: "Final GriseldaMP", points: 48, exact: 6, eff: "22.2%", emoji: "🏃‍♂️" },
-    { rank: 16, name: "Edith Alejandra Pescador", points: 47, exact: 6, eff: "21.8%", emoji: "🏃‍♂️" },
-    { rank: 16, name: "Liliana", points: 47, exact: 6, eff: "21.8%", emoji: "🏃‍♂️" },
-    { rank: 18, name: "Arnold Ronaldo", points: 45, exact: 4, eff: "20.8%", emoji: "🏃‍♂️" },
-    { rank: 19, name: "IVAN MEJIA QUINIELA 8905", points: 43, exact: 5, eff: "19.9%", emoji: "🏃‍♂️" },
-    { rank: 20, name: "Paloma Alonso-1", points: 42, exact: 4, eff: "19.4%", emoji: "🏃‍♂️" },
-  ];
 
   return (
     <div className="max-w-3xl mx-auto p-4 md:p-8">

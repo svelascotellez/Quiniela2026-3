@@ -10,6 +10,7 @@ import { SignOutButton } from "@/components/SignOutButton";
 import { RefreshButton } from "@/components/RefreshButton";
 import { DashboardStats } from "@/components/DashboardStats";
 import { GroupStageResults } from "@/components/GroupStageResults";
+import { GrandTotalRanking } from "@/components/GrandTotalRanking";
 
 export default async function Home() {
   const session = await getServerSession(authOptions);
@@ -79,6 +80,10 @@ export default async function Home() {
 
   const groupStageComponent = (
     <GroupStageResults />
+  );
+
+  const grandTotalComponent = (
+    <GrandTotalRanking dbUsers={allUsers.filter((u) => u.role !== "ADMIN")} maxPointsDisputed={maxPointsDisputed} />
   );
 
   const rankingComponent = (
@@ -175,6 +180,7 @@ export default async function Home() {
         rankingComponent={rankingComponent} 
         dashboardComponent={dashboardComponent}
         groupStageComponent={groupStageComponent}
+        grandTotalComponent={grandTotalComponent}
       />
     </div>
   );

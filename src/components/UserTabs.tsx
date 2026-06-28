@@ -6,14 +6,16 @@ export function UserTabs({
   bracketComponent, 
   rankingComponent,
   dashboardComponent,
-  groupStageComponent
+  groupStageComponent,
+  grandTotalComponent
 }: { 
   bracketComponent: React.ReactNode;
   rankingComponent: React.ReactNode;
   dashboardComponent?: React.ReactNode;
   groupStageComponent?: React.ReactNode;
+  grandTotalComponent?: React.ReactNode;
 }) {
-  const [activeTab, setActiveTab] = useState<"bracket" | "ranking" | "dashboard" | "groupStage">("bracket");
+  const [activeTab, setActiveTab] = useState<"bracket" | "ranking" | "dashboard" | "groupStage" | "grandTotal">("bracket");
 
   return (
     <div className="flex flex-col flex-1 h-full">
@@ -60,6 +62,16 @@ export function UserTabs({
           >
             Fase de Grupos
           </button>
+          <button
+            onClick={() => setActiveTab("grandTotal")}
+            className={`flex-1 py-4 text-center font-bold text-xs md:text-sm uppercase tracking-wider transition-colors border-b-4 ${
+              activeTab === "grandTotal"
+                ? "border-[#d4af37] text-[#0b132b]"
+                : "border-transparent text-gray-400 hover:text-gray-600 hover:bg-gray-50"
+            }`}
+          >
+            Gran Total
+          </button>
         </div>
       </div>
 
@@ -83,6 +95,11 @@ export function UserTabs({
         {activeTab === "groupStage" && (
           <div className="flex-1 overflow-y-auto bg-[#f0ebd8]">
             {groupStageComponent}
+          </div>
+        )}
+        {activeTab === "grandTotal" && (
+          <div className="flex-1 overflow-y-auto bg-[#fff9e6]">
+            {grandTotalComponent}
           </div>
         )}
       </div>
