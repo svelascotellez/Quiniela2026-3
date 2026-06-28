@@ -6,6 +6,7 @@ import { CreateUserForm } from "./CreateUserForm";
 import { TournamentBracket } from "@/components/TournamentBracket";
 import { getDynamicMatches } from "@/lib/matchUtils";
 import { AdminTabs } from "./AdminTabs";
+import { UserListItem } from "./UserListItem";
 import Link from "next/link";
 
 export default async function AdminPage() {
@@ -57,14 +58,7 @@ export default async function AdminPage() {
         <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-md max-h-[500px] overflow-y-auto">
           <ul className="space-y-2">
             {users.map((u, i) => (
-              <li key={u.id} className="flex justify-between items-center bg-gray-50 p-3 rounded shadow-sm border border-gray-100">
-                <span className="font-medium text-gray-700">
-                  <span className="text-gray-400 mr-2 w-4 inline-block">{i + 1}.</span> 
-                  {u.username} 
-                  {u.role === "ADMIN" && <span className="ml-2 text-xs bg-blue-100 text-blue-800 px-1 py-0.5 rounded">ADMIN</span>}
-                </span>
-                <span className="font-bold text-[#0b132b]">{u.totalPoints} pts</span>
-              </li>
+              <UserListItem key={u.id} user={u} index={i} />
             ))}
           </ul>
         </div>

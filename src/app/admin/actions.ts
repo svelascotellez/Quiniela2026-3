@@ -26,6 +26,24 @@ export async function createUser(data: FormData) {
   }
 }
 
+export async function changeUserPassword(userId: string, data: FormData) {
+  const newPassword = data.get("password") as string;
+  if (!newPassword || newPassword.length < 4) return { error: "La contraseña debe tener al menos 4 caracteres." };
+
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+  
+  try {
+    await prisma.user.update({
+      where: { id: userId },
+      data: { password: hashedPassword }
+    });
+    revalidatePath("/admin");
+    return { success: true };
+  } catch(error) {
+    return { error: "No se pudo actualizar la contraseña" };
+  }
+}
+
 export async function updateMatchResult(matchId: string, data: FormData) {
   const scoreA = data.get("scoreA") as string;
   const scoreB = data.get("scoreB") as string;
