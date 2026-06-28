@@ -47,9 +47,11 @@ export function TournamentBracket({
     <div className="w-full h-full overflow-auto bg-[#f8f9fa] p-8">
       
       {/* Lock Button Section */}
-      <div className="min-w-[1200px] max-w-[2000px] mx-auto">
-        <LockQuinielaButton isLocked={isLocked} />
-      </div>
+      {!isAdmin && (
+        <div className="min-w-[1200px] max-w-[2000px] mx-auto">
+          <LockQuinielaButton isLocked={isLocked} />
+        </div>
+      )}
 
       {/* Headers Row */}
       <div className="flex justify-between min-w-[2000px] mb-8 sticky top-0 z-10 px-4">
