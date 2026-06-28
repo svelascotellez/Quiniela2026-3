@@ -119,10 +119,6 @@ export function AdminMatchForm({ match }: { match: any }) {
             onChange={(e) => {
               const val = e.target.value.replace(/[^0-9]/g, '');
               setScoreA(val);
-              if (val !== "" && scoreB !== "" && val !== scoreB) handleSave(val, scoreB, penaltyWinner);
-            }}
-            onBlur={() => {
-              if (scoreA !== "" && scoreB !== "") handleSave(scoreA, scoreB, penaltyWinner);
             }}
           />
         </div>
@@ -145,10 +141,6 @@ export function AdminMatchForm({ match }: { match: any }) {
             onChange={(e) => {
               const val = e.target.value.replace(/[^0-9]/g, '');
               setScoreB(val);
-              if (val !== "" && scoreA !== "" && val !== scoreA) handleSave(scoreA, val, penaltyWinner);
-            }}
-            onBlur={() => {
-              if (scoreA !== "" && scoreB !== "") handleSave(scoreA, scoreB, penaltyWinner);
             }}
           />
         </div>
@@ -160,17 +152,26 @@ export function AdminMatchForm({ match }: { match: any }) {
           <span className="font-medium mb-1">Empate. Selecciona ganador:</span>
           <div className="flex gap-4">
              <label className="flex items-center gap-1 cursor-pointer">
-                <input type="radio" name={`pen_${match.id}`} checked={penaltyWinner === "A"} onChange={() => { setPenaltyWinner("A"); handleSave(scoreA, scoreB, "A"); }} className="accent-amber-600" />
+                <input type="radio" name={`pen_${match.id}`} checked={penaltyWinner === "A"} onChange={() => { setPenaltyWinner("A"); }} className="accent-amber-600" />
                 <span className="truncate max-w-[60px]">{match.teamA}</span>
              </label>
              <label className="flex items-center gap-1 cursor-pointer">
-                <input type="radio" name={`pen_${match.id}`} checked={penaltyWinner === "B"} onChange={() => { setPenaltyWinner("B"); handleSave(scoreA, scoreB, "B"); }} className="accent-amber-600" />
+                <input type="radio" name={`pen_${match.id}`} checked={penaltyWinner === "B"} onChange={() => { setPenaltyWinner("B"); }} className="accent-amber-600" />
                 <span className="truncate max-w-[60px]">{match.teamB}</span>
              </label>
           </div>
         </div>
       )}
-      
+      {/* Botón Guardar */}
+      <div className="bg-gray-50 p-2 text-center border-t border-gray-100 rounded-b-lg">
+        <button
+          onClick={() => handleSave(scoreA, scoreB, penaltyWinner)}
+          disabled={loading || scoreA === "" || scoreB === "" || (scoreA === scoreB && !penaltyWinner)}
+          className="bg-[#0b132b] text-white text-xs font-bold py-1 px-3 rounded hover:bg-blue-900 disabled:opacity-50 disabled:cursor-not-allowed transition-colors w-full"
+        >
+          {loading ? "Guardando..." : saved ? "¡Guardado!" : "Guardar Resultado"}
+        </button>
+      </div>
       {/* Loading indicator */}
       {loading && (
         <div className="absolute inset-0 bg-white/50 flex items-center justify-center rounded-lg">
