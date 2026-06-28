@@ -32,6 +32,16 @@ export default async function Home() {
   const currentUser = allUsers.find((u) => u.id === session.user.id);
   const rankingUsers = allUsers.filter((u) => u.role !== "ADMIN");
   
+  let currentRank = 1;
+  let currentPoints = -1;
+  const rankedUsers = rankingUsers.map((u, i) => {
+    if (u.totalPoints !== currentPoints) {
+      currentRank = i + 1;
+      currentPoints = u.totalPoints;
+    }
+    return { ...u, rank: currentRank };
+  });
+
   const finishedMatchesCount = rawMatches.filter(m => m.isFinished).length;
   const maxPointsDisputed = finishedMatchesCount * 3;
 
@@ -54,19 +64,19 @@ export default async function Home() {
         <hr className="border-t-2 border-dashed border-[#b3d493] my-4" />
         
         <ul className="space-y-3">
-          {rankingUsers.map((u, i) => {
+          {rankedUsers.map((u, i) => {
             const exactCount = u.predictions.filter(p => p.pointsEarned === 3).length;
             const eff = maxPointsDisputed > 0 ? ((u.totalPoints / maxPointsDisputed) * 100).toFixed(1) : "0.0";
             
             let emoji = "🏃‍♂️";
-            if (i === 0) emoji = "🥇";
-            else if (i === 1) emoji = "🥈";
-            else if (i === 2) emoji = "🥉";
+            if (u.rank === 1) emoji = "🥇";
+            else if (u.rank === 2) emoji = "🥈";
+            else if (u.rank === 3) emoji = "🥉";
 
             return (
               <li key={u.id} className={`flex flex-col md:flex-row md:items-center text-sm md:text-base ${u.id === session.user.id ? 'font-black bg-white/50 p-2 rounded -mx-2' : 'font-medium'}`}>
                 <div className="flex items-center">
-                  <span className="w-6 text-right mr-1">{i + 1}.</span> 
+                  <span className="w-6 text-right mr-1">{u.rank}.</span> 
                   <span className="mr-2">{emoji}</span>
                   <span className="uppercase">{u.username}</span> 
                   <span className="mx-2">➔</span> 

@@ -29,8 +29,16 @@ export default async function AdminPage() {
   const getWhatsAppLink = () => {
     let text = "🏆 *Tabla de Posiciones Quiniela Mundial 2026* 🏆\n\n";
     const rankingUsers = users.filter(u => u.role !== "ADMIN");
+    
+    let currentRank = 1;
+    let currentPoints = -1;
+    
     rankingUsers.forEach((u, i) => {
-      text += `${i + 1}. ${u.username} - ${u.totalPoints} pts\n`;
+      if (u.totalPoints !== currentPoints) {
+        currentRank = i + 1;
+        currentPoints = u.totalPoints;
+      }
+      text += `${currentRank}. ${u.username} - ${u.totalPoints} pts\n`;
     });
     text += "\nActualizado recientemente.";
     return `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
