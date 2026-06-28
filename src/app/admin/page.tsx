@@ -28,7 +28,8 @@ export default async function AdminPage() {
 
   const getWhatsAppLink = () => {
     let text = "🏆 *Tabla de Posiciones Quiniela Mundial 2026* 🏆\n\n";
-    users.forEach((u, i) => {
+    const rankingUsers = users.filter(u => u.role !== "ADMIN");
+    rankingUsers.forEach((u, i) => {
       text += `${i + 1}. ${u.username} - ${u.totalPoints} pts\n`;
     });
     text += "\nActualizado recientemente.";

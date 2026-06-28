@@ -24,12 +24,13 @@ export default async function Home() {
 
   const matches = getDynamicMatches(rawMatches, predictions);
 
-  const users = await prisma.user.findMany({
+  const allUsers = await prisma.user.findMany({
     include: { predictions: true },
     orderBy: { totalPoints: "desc" },
   });
 
-  const currentUser = users.find((u) => u.id === session.user.id);
+  const currentUser = allUsers.find((u) => u.id === session.user.id);
+  const rankingUsers = allUsers.filter((u) => u.role !== "ADMIN");
   
   const finishedMatchesCount = rawMatches.filter(m => m.isFinished).length;
   const maxPointsDisputed = finishedMatchesCount * 3;
@@ -53,7 +54,7 @@ export default async function Home() {
         <hr className="border-t-2 border-dashed border-[#b3d493] my-4" />
         
         <ul className="space-y-3">
-          {users.map((u, i) => {
+          {rankingUsers.map((u, i) => {
             const exactCount = u.predictions.filter(p => p.pointsEarned === 3).length;
             const eff = maxPointsDisputed > 0 ? ((u.totalPoints / maxPointsDisputed) * 100).toFixed(1) : "0.0";
             
@@ -77,11 +78,11 @@ export default async function Home() {
           })}
         </ul>
         
-        {users.length > 0 && (
+        {rankingUsers.length > 0 && (
           <>
             <hr className="border-t-2 border-dashed border-[#b3d493] my-4" />
             <p className="font-bold text-center mt-4">
-              🔥 ¡Felicidades a {users[0].username} que va de líder! ¿Quién ganará? 🍿🚀
+              🔥 ¡Felicidades a {rankingUsers[0].username} que va de líder! ¿Quién ganará? 🍿🚀
             </p>
           </>
         )}
