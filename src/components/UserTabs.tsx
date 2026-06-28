@@ -34,13 +34,13 @@ export function UserTabs({
           </button>
           <button
             onClick={() => setActiveTab("ranking")}
-            className={`flex-1 py-4 text-center font-bold text-sm uppercase tracking-wider transition-colors border-b-4 ${
+            className={`flex-1 py-4 text-center font-bold text-xs md:text-sm uppercase tracking-wider transition-colors border-b-4 ${
               activeTab === "ranking"
                 ? "border-[#d4af37] text-[#0b132b]"
                 : "border-transparent text-gray-400 hover:text-gray-600 hover:bg-gray-50"
             }`}
           >
-            Ranking Global
+            Fase Final
           </button>
           <button
             onClick={() => setActiveTab("dashboard")}

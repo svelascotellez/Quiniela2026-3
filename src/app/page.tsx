@@ -90,7 +90,7 @@ export default async function Home() {
     <div className="max-w-3xl mx-auto p-4 md:p-8">
       <div className="bg-[#dcf8c6] rounded-xl shadow-lg border border-[#c1e2a4] p-6 mb-8 text-[#0b132b]">
         <h2 className="text-xl md:text-2xl font-black mb-2 flex items-center gap-2">
-          🏆 CLASIFICACIÓN QUINIELA MUNDIAL 2026 🏆
+          🏆 RESULTADOS: FASE FINAL 🏆
         </h2>
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-4 gap-4">
           <div>
