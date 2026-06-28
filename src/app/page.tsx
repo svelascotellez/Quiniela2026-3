@@ -110,13 +110,19 @@ export default async function Home() {
           </h1>
           <p className="text-gray-300 text-sm font-medium">Panel de {session.user.name}</p>
         </div>
-        <div className="flex gap-6 items-center">
-          <div className="text-center">
+        <div className="flex gap-4 md:gap-6 items-center">
+          <div className="text-center hidden sm:block">
             <span className="block text-xs text-gray-400 uppercase font-bold tracking-wider">Mis Puntos</span>
             <span className="block text-xl font-black text-[#d4af37]">{currentUser?.totalPoints ?? 0}</span>
           </div>
+          <a
+            href="/api/export"
+            className="bg-[#0b132b] border border-gray-600 hover:bg-gray-800 text-white font-bold py-2 px-3 md:px-4 rounded-md transition-colors shadow-lg text-xs md:text-sm flex items-center gap-2"
+          >
+            <span>📥 Descargar CSV</span>
+          </a>
           {session.user.role === "ADMIN" && (
-            <Link href="/admin" className="bg-[#d4af37] hover:bg-yellow-500 text-[#0b132b] font-bold py-2 px-4 rounded-md transition-colors shadow-lg">
+            <Link href="/admin" className="bg-[#d4af37] hover:bg-yellow-500 text-[#0b132b] font-bold py-2 px-3 md:px-4 rounded-md transition-colors shadow-lg text-xs md:text-sm">
               Administración
             </Link>
           )}
