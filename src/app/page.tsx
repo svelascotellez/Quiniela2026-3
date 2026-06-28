@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { TournamentBracket } from "@/components/TournamentBracket";
 import { getDynamicMatches } from "@/lib/matchUtils";
+import { UserTabs } from "@/components/UserTabs";
 
 export default async function Home() {
   const session = await getServerSession(authOptions);
@@ -24,15 +25,74 @@ export default async function Home() {
   const matches = getDynamicMatches(rawMatches, predictions);
 
   const users = await prisma.user.findMany({
+    include: { predictions: true },
     orderBy: { totalPoints: "desc" },
   });
 
   const currentUser = users.find((u) => u.id === session.user.id);
+  
+  const finishedMatchesCount = rawMatches.filter(m => m.isFinished).length;
+  const maxPointsDisputed = finishedMatchesCount * 3;
+
+  const bracketComponent = (
+    <TournamentBracket matches={matches} predictions={predictions} />
+  );
+
+  const rankingComponent = (
+    <div className="max-w-3xl mx-auto p-4 md:p-8">
+      <div className="bg-[#dcf8c6] rounded-xl shadow-lg border border-[#c1e2a4] p-6 mb-8 text-[#0b132b]">
+        <h2 className="text-xl md:text-2xl font-black mb-2 flex items-center gap-2">
+          🏆 CLASIFICACIÓN QUINIELA MUNDIAL 2026 🏆
+        </h2>
+        <p className="text-sm md:text-base font-semibold text-gray-700 flex items-center gap-2 mb-1">
+          📊 Actualizado: {new Date().toLocaleString("es-MX", { dateStyle: "short", timeStyle: "short", timeZone: "America/Mexico_City" })}
+        </p>
+        <p className="text-sm md:text-base font-semibold text-gray-700 flex items-center gap-2">
+          🎯 Puntos Máximos Disputados hasta hoy: {maxPointsDisputed}
+        </p>
+        <hr className="border-t-2 border-dashed border-[#b3d493] my-4" />
+        
+        <ul className="space-y-3">
+          {users.map((u, i) => {
+            const exactCount = u.predictions.filter(p => p.pointsEarned === 3).length;
+            const eff = maxPointsDisputed > 0 ? ((u.totalPoints / maxPointsDisputed) * 100).toFixed(1) : "0.0";
+            
+            let emoji = "🏃‍♂️";
+            if (i === 0) emoji = "🥇";
+            else if (i === 1) emoji = "🥈";
+            else if (i === 2) emoji = "🥉";
+
+            return (
+              <li key={u.id} className={`flex flex-col md:flex-row md:items-center text-sm md:text-base ${u.id === session.user.id ? 'font-black bg-white/50 p-2 rounded -mx-2' : 'font-medium'}`}>
+                <div className="flex items-center">
+                  <span className="w-6 text-right mr-1">{i + 1}.</span> 
+                  <span className="mr-2">{emoji}</span>
+                  <span className="uppercase">{u.username}</span> 
+                  <span className="mx-2">➔</span> 
+                  <span className="font-bold">{u.totalPoints} pts</span>
+                </div>
+                <span className="text-gray-600 md:ml-2">({exactCount} marcadores exactos | {eff}% efectividad)</span>
+              </li>
+            )
+          })}
+        </ul>
+        
+        {users.length > 0 && (
+          <>
+            <hr className="border-t-2 border-dashed border-[#b3d493] my-4" />
+            <p className="font-bold text-center mt-4">
+              🔥 ¡Felicidades a {users[0].username} que va de líder! ¿Quién ganará? 🍿🚀
+            </p>
+          </>
+        )}
+      </div>
+    </div>
+  );
 
   return (
-    <div className="min-h-screen bg-[#f8f9fa] font-sans flex flex-col relative">
+    <div className="min-h-screen bg-[#f8f9fa] font-sans flex flex-col relative h-screen">
       {/* Top Navbar */}
-      <header className="flex justify-between items-center bg-[#0b132b] text-white px-6 py-4 shadow-xl z-20 sticky top-0">
+      <header className="flex justify-between items-center bg-[#0b132b] text-white px-6 py-4 shadow-xl z-20 shrink-0">
         <div>
           <h1 className="text-2xl font-black text-[#d4af37] tracking-wider uppercase">
             Quiniela Mundial 2026
@@ -52,34 +112,11 @@ export default async function Home() {
         </div>
       </header>
 
-      {/* Bracket Area */}
-      <main className="flex-1 overflow-hidden relative">
-         <TournamentBracket matches={matches} predictions={predictions} />
-      </main>
-
-      {/* Leaderboard Section (Bottom) */}
-      <section className="bg-white border-t-4 border-[#d4af37] p-8 shadow-2xl relative z-10">
-         <div className="max-w-4xl mx-auto">
-            <h2 className="text-2xl font-bold text-[#0b132b] mb-6 text-center uppercase tracking-wider flex items-center justify-center gap-3">
-              <span>🏆</span> Tabla de Posiciones Global <span>🏆</span>
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {users.map((u, i) => (
-                <div key={u.id} className={`flex justify-between items-center p-4 rounded-lg border-2 ${u.id === session.user.id ? 'border-[#d4af37] bg-yellow-50' : 'border-gray-100 bg-white shadow-sm'}`}>
-                  <div className="flex items-center gap-4">
-                    <span className={`flex items-center justify-center w-8 h-8 rounded-full text-sm font-bold shadow-sm ${i === 0 ? 'bg-[#d4af37] text-white' : i === 1 ? 'bg-gray-300 text-gray-800' : i === 2 ? 'bg-amber-600 text-white' : 'bg-gray-100 text-gray-500'}`}>
-                      {i + 1}
-                    </span>
-                    <span className={`font-bold text-lg ${u.id === session.user.id ? 'text-[#0b132b]' : 'text-gray-700'}`}>
-                      {u.username}
-                    </span>
-                  </div>
-                  <span className="font-black text-[#0b132b] text-xl">{u.totalPoints} <span className="text-xs text-gray-500 font-normal">pts</span></span>
-                </div>
-              ))}
-            </div>
-         </div>
-      </section>
+      {/* Tabs Layout */}
+      <UserTabs 
+        bracketComponent={bracketComponent} 
+        rankingComponent={rankingComponent} 
+      />
     </div>
   );
 }
