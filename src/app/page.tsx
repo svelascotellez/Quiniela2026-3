@@ -6,6 +6,7 @@ import Link from "next/link";
 import { TournamentBracket } from "@/components/TournamentBracket";
 import { getDynamicMatches } from "@/lib/matchUtils";
 import { UserTabs } from "@/components/UserTabs";
+import { SignOutButton } from "@/components/SignOutButton";
 
 export default async function Home() {
   const session = await getServerSession(authOptions);
@@ -126,6 +127,7 @@ export default async function Home() {
               Administración
             </Link>
           )}
+          <SignOutButton />
         </div>
       </header>
 

@@ -8,6 +8,7 @@ import { getDynamicMatches } from "@/lib/matchUtils";
 import { AdminTabs } from "./AdminTabs";
 import { UserListItem } from "./UserListItem";
 import Link from "next/link";
+import { SignOutButton } from "@/components/SignOutButton";
 
 export default async function AdminPage() {
   const session = await getServerSession(authOptions);
@@ -95,9 +96,10 @@ export default async function AdminPage() {
           >
             <span>Compartir WhatsApp</span>
           </a>
-          <Link href="/" className="bg-gray-100 hover:bg-white text-[#0b132b] font-bold py-2 px-4 rounded-md transition-colors shadow-lg">
+          <Link href="/" className="bg-gray-100 hover:bg-white text-[#0b132b] font-bold py-2 px-3 md:px-4 rounded-md transition-colors shadow-lg text-xs md:text-sm whitespace-nowrap">
             Ver mi Quiniela
           </Link>
+          <SignOutButton />
         </div>
       </header>
 
