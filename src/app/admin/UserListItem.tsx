@@ -75,12 +75,20 @@ export function UserListItem({ user, index }: { user: any, index: number }) {
   return (
     <li className="flex flex-col bg-gray-50 p-3 rounded shadow-sm border border-gray-100">
       <div className="flex justify-between items-center w-full">
-        <span className="font-medium text-gray-700">
-          <span className="text-gray-400 mr-2 w-4 inline-block">{index + 1}.</span> 
-          {user.username} 
-          {user.role === "ADMIN" && <span className="ml-2 text-xs bg-blue-100 text-blue-800 px-1 py-0.5 rounded">ADMIN</span>}
+        <span className="font-medium text-gray-700 flex items-center gap-2">
+          <span><span className="text-gray-400 mr-2 w-4 inline-block">{index + 1}.</span>{user.username}</span>
+          {user.role === "ADMIN" && <span className="text-[10px] bg-blue-100 text-blue-800 px-1 py-0.5 rounded">ADMIN</span>}
+          {user.isLocked ? (
+            <span className="text-[10px] bg-green-100 text-green-800 px-1.5 py-0.5 rounded flex items-center gap-1" title="Quiniela enviada/bloqueada">
+              🔒 Lista
+            </span>
+          ) : (
+            <span className="text-[10px] bg-orange-100 text-orange-800 px-1.5 py-0.5 rounded flex items-center gap-1" title="Aún no envía su quiniela">
+              ⏳ Pendiente
+            </span>
+          )}
         </span>
-        <div className="flex items-center gap-4">
+        <div className="flex flex-wrap items-center gap-2 md:gap-4 justify-end">
           <span className="font-bold text-[#0b132b]">{user.totalPoints} pts</span>
           <button 
             onClick={handleToggleRole}
