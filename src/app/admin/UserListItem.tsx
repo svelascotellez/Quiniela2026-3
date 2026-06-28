@@ -1,11 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { changeUserPassword, changeUserRole } from "./actions";
+import { changeUserPassword, changeUserRole, editUsername, deleteUser } from "./actions";
 
 export function UserListItem({ user, index }: { user: any, index: number }) {
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditingPass, setIsEditingPass] = useState(false);
+  const [isEditingName, setIsEditingName] = useState(false);
   const [newPassword, setNewPassword] = useState("");
+  const [newUsername, setNewUsername] = useState(user.username);
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -24,7 +26,38 @@ export function UserListItem({ user, index }: { user: any, index: number }) {
     } else {
       setMessage("✅ Contraseña actualizada");
       setNewPassword("");
-      setTimeout(() => setIsEditing(false), 2000);
+      setTimeout(() => setIsEditingPass(false), 2000);
+    }
+    setLoading(false);
+  }
+
+  async function handleUsernameChange(e: React.FormEvent) {
+    e.preventDefault();
+    setLoading(true);
+    setMessage("");
+    
+    const formData = new FormData();
+    formData.append("username", newUsername);
+    
+    const res = await editUsername(user.id, formData);
+    
+    if (res?.error) {
+      setMessage(`❌ ${res.error}`);
+    } else {
+      setMessage("✅ Nombre actualizado");
+      setTimeout(() => setIsEditingName(false), 2000);
+    }
+    setLoading(false);
+  }
+
+  async function handleDeleteUser() {
+    if (!window.confirm(`¿Estás seguro de que quieres eliminar a ${user.username}? Esta acción también borrará todas sus predicciones y no se puede deshacer.`)) {
+      return;
+    }
+    setLoading(true);
+    const res = await deleteUser(user.id);
+    if (res?.error) {
+      alert(`❌ ${res.error}`);
     }
     setLoading(false);
   }
@@ -57,15 +90,51 @@ export function UserListItem({ user, index }: { user: any, index: number }) {
             {user.role === "ADMIN" ? "Quitar Admin" : "Hacer Admin"}
           </button>
           <button 
-            onClick={() => setIsEditing(!isEditing)}
+            onClick={() => { setIsEditingName(!isEditingName); setIsEditingPass(false); setMessage(""); }}
             className="text-xs bg-gray-200 hover:bg-gray-300 text-gray-700 px-2 py-1 rounded transition-colors"
           >
-            {isEditing ? "Cancelar" : "🔑 Cambiar Pass"}
+            {isEditingName ? "Cancelar" : "✏️ Nombre"}
+          </button>
+          <button 
+            onClick={() => { setIsEditingPass(!isEditingPass); setIsEditingName(false); setMessage(""); }}
+            className="text-xs bg-gray-200 hover:bg-gray-300 text-gray-700 px-2 py-1 rounded transition-colors"
+          >
+            {isEditingPass ? "Cancelar" : "🔑 Pass"}
+          </button>
+          <button 
+            onClick={handleDeleteUser}
+            disabled={loading}
+            className="text-xs bg-red-100 hover:bg-red-200 text-red-800 px-2 py-1 rounded transition-colors disabled:opacity-50"
+          >
+            🗑️ Eliminar
           </button>
         </div>
       </div>
       
-      {isEditing && (
+      {isEditingName && (
+        <form onSubmit={handleUsernameChange} className="mt-3 pt-3 border-t border-gray-200 flex flex-col gap-2">
+          <div className="flex gap-2">
+            <input 
+              type="text" 
+              placeholder="Nuevo nombre" 
+              value={newUsername}
+              onChange={(e) => setNewUsername(e.target.value)}
+              className="flex-1 border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-[#d4af37]"
+              required
+            />
+            <button 
+              type="submit" 
+              disabled={loading}
+              className="bg-[#0b132b] hover:bg-[#1a2c5b] text-white px-3 py-1 rounded text-sm transition-colors disabled:opacity-50"
+            >
+              {loading ? "Guardando..." : "Guardar"}
+            </button>
+          </div>
+          {message && <p className="text-xs font-medium">{message}</p>}
+        </form>
+      )}
+
+      {isEditingPass && (
         <form onSubmit={handlePasswordChange} className="mt-3 pt-3 border-t border-gray-200 flex flex-col gap-2">
           <div className="flex gap-2">
             <input 

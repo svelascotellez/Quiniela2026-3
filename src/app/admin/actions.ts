@@ -60,6 +60,42 @@ export async function changeUserRole(userId: string, newRole: string) {
   }
 }
 
+export async function editUsername(userId: string, data: FormData) {
+  const newUsername = data.get("username") as string;
+  if (!newUsername || newUsername.trim() === "") return { error: "El nombre de usuario no puede estar vacío" };
+
+  try {
+    await prisma.user.update({
+      where: { id: userId },
+      data: { username: newUsername.trim() }
+    });
+    revalidatePath("/admin");
+    revalidatePath("/");
+    return { success: true };
+  } catch(error) {
+    return { error: "El nombre de usuario ya existe o hubo un error" };
+  }
+}
+
+export async function deleteUser(userId: string) {
+  try {
+    // Primero eliminar las predicciones asociadas para evitar errores de llave foránea
+    await prisma.prediction.deleteMany({
+      where: { userId }
+    });
+    
+    // Luego eliminar al usuario
+    await prisma.user.delete({
+      where: { id: userId }
+    });
+    revalidatePath("/admin");
+    revalidatePath("/");
+    return { success: true };
+  } catch(error) {
+    return { error: "No se pudo eliminar al usuario." };
+  }
+}
+
 export async function updateMatchResult(matchId: string, data: FormData) {
   const scoreA = data.get("scoreA") as string;
   const scoreB = data.get("scoreB") as string;
