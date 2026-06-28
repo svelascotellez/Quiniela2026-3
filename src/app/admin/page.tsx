@@ -60,7 +60,7 @@ export default async function AdminPage() {
         </div>
       </div>
 
-      <div className="w-full max-w-2xl">
+      <div className="w-full max-w-5xl">
         <h2 className="text-xl font-bold text-[#0b132b] mb-4 uppercase tracking-wider border-b-2 border-gray-200 pb-2 flex justify-between items-center">
           <span>Usuarios Actuales</span>
           <span className="bg-[#d4af37] text-white text-xs px-2 py-1 rounded-full">{users.length}</span>
