@@ -13,6 +13,7 @@ model User {
   password    String
   role        String       @default("USER") // USER or ADMIN
   totalPoints Int          @default(0)
+  isLocked    Boolean      @default(false)
   predictions Prediction[]
 }
 

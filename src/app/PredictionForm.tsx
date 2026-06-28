@@ -49,7 +49,7 @@ const getFlag = (team: string) => {
   return "🏳️";
 };
 
-export function PredictionForm({ match, prediction }: { match: any, prediction: any }) {
+export function PredictionForm({ match, prediction, isLocked = false }: { match: any, prediction: any, isLocked?: boolean }) {
   const [scoreA, setScoreA] = useState(prediction?.predScoreA ?? "");
   const [scoreB, setScoreB] = useState(prediction?.predScoreB ?? "");
   const [penaltyWinner, setPenaltyWinner] = useState(prediction?.predWinnerPenalty ?? "");
@@ -57,6 +57,7 @@ export function PredictionForm({ match, prediction }: { match: any, prediction: 
   const [saved, setSaved] = useState(false);
 
   const isFinished = match.isFinished;
+  const disabled = isFinished || isLocked;
 
   // Auto-save on blur instead of explicit button to keep it clean (bracket style)
   const handleSave = async (sA: string, sB: string, pWinner: string) => {
@@ -124,7 +125,7 @@ export function PredictionForm({ match, prediction }: { match: any, prediction: 
             type="text"
             inputMode="numeric"
             maxLength={2}
-            disabled={isFinished}
+            disabled={disabled}
             className={`w-8 h-8 text-center text-sm font-bold bg-gray-50 border rounded-md outline-none transition-colors disabled:opacity-70 disabled:bg-gray-100 ${winner === "A" ? 'text-gray-900 border-gray-300' : 'text-gray-500 border-gray-200'}`}
             value={isFinished ? (match.realScoreA ?? "") : scoreA}
             onChange={(e) => {
@@ -151,7 +152,7 @@ export function PredictionForm({ match, prediction }: { match: any, prediction: 
             type="text"
             inputMode="numeric"
             maxLength={2}
-            disabled={isFinished}
+            disabled={disabled}
             className={`w-8 h-8 text-center text-sm font-bold bg-gray-50 border rounded-md outline-none transition-colors disabled:opacity-70 disabled:bg-gray-100 ${winner === "B" ? 'text-gray-900 border-gray-300' : 'text-gray-500 border-gray-200'}`}
             value={isFinished ? (match.realScoreB ?? "") : scoreB}
             onChange={(e) => {
@@ -167,7 +168,7 @@ export function PredictionForm({ match, prediction }: { match: any, prediction: 
       </div>
 
       {/* Penalty Selector */}
-      {!isFinished && isTie && (
+      {!isFinished && !isLocked && isTie && (
         <div className="bg-amber-50 p-2 text-xs text-amber-900 border-t border-amber-100 rounded-b-lg flex flex-col items-center">
           <span className="font-medium mb-1">Empate. Selecciona ganador:</span>
           <div className="flex gap-4">

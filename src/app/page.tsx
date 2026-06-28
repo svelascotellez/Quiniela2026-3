@@ -46,7 +46,7 @@ export default async function Home() {
   const maxPointsDisputed = finishedMatchesCount * 3;
 
   const bracketComponent = (
-    <TournamentBracket matches={matches} predictions={predictions} />
+    <TournamentBracket matches={matches} predictions={predictions} isLocked={currentUser?.isLocked || false} />
   );
 
   const rankingComponent = (

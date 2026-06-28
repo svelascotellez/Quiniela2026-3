@@ -1,9 +1,20 @@
 "use client";
 
 import { PredictionForm } from "@/app/PredictionForm";
+import { LockQuinielaButton } from "@/components/LockQuinielaButton";
 import { AdminMatchForm } from "@/app/admin/AdminMatchForm";
 
-export function TournamentBracket({ matches, predictions, isAdmin = false }: { matches: any[], predictions?: any[], isAdmin?: boolean }) {
+export function TournamentBracket({ 
+  matches, 
+  predictions,
+  isAdmin = false,
+  isLocked = false 
+}: { 
+  matches: any[]; 
+  predictions?: any[]; 
+  isAdmin?: boolean;
+  isLocked?: boolean;
+}) {
   // Helpers to get match by number
   const getMatch = (num: number) => matches.find(m => m.matchNumber === num);
   
@@ -28,13 +39,18 @@ export function TournamentBracket({ matches, predictions, isAdmin = false }: { m
       return <AdminMatchForm key={match.id} match={match} />;
     } else {
       const pred = predictions?.find(p => p.matchId === match.id);
-      return <PredictionForm key={match.id} match={match} prediction={pred} />;
+      return <PredictionForm key={match.id} match={match} prediction={pred} isLocked={isLocked} />;
     }
   };
 
   return (
     <div className="w-full h-full overflow-auto bg-[#f8f9fa] p-8">
       
+      {/* Lock Button Section */}
+      <div className="min-w-[1200px] max-w-[2000px] mx-auto">
+        <LockQuinielaButton isLocked={isLocked} />
+      </div>
+
       {/* Headers Row */}
       <div className="flex justify-between min-w-[2000px] mb-8 sticky top-0 z-10 px-4">
         <div className="w-64 bg-[#0b132b] text-white text-center py-2 rounded-lg font-bold shadow-md">RONDA DE 32</div>

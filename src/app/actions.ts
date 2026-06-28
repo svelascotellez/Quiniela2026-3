@@ -24,6 +24,12 @@ export async function savePrediction(matchId: string, data: FormData) {
     predWinnerPenalty = penaltyWinner;
   }
 
+  // Verificar que el usuario no tenga la quiniela bloqueada
+  const user = await prisma.user.findUnique({ where: { id: session.user.id } });
+  if (user?.isLocked) {
+    return { error: "Tu quiniela ya ha sido enviada y no puede modificarse" };
+  }
+
   // Verificar que el partido no haya terminado
   const match = await prisma.match.findUnique({ where: { id: matchId } });
   if (!match || match.isFinished) {
@@ -49,6 +55,19 @@ export async function savePrediction(matchId: string, data: FormData) {
       predScoreB: numB,
       predWinnerPenalty,
     },
+  });
+
+  revalidatePath("/");
+  return { success: true };
+}
+
+export async function lockQuiniela() {
+  const session = await getServerSession(authOptions);
+  if (!session) return { error: "No autorizado" };
+
+  await prisma.user.update({
+    where: { id: session.user.id },
+    data: { isLocked: true }
   });
 
   revalidatePath("/");
